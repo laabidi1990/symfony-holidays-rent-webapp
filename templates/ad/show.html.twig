@@ -51,27 +51,23 @@
                 </div>
             </div>
             <div class="col">
+                {% set auth = ad.author %}
                 <div class="row mb-3 align-items-center">
-                    <div class="col-3">
-                        <img src="http://placehold.it/64x64" alt="Avatar de Mohamed">
+                    <div class="col-4">
+                        <a href="{{ path('user_show', {'slug' : auth.slug}) }}">
+                            <img src="{{ auth.picture }}" alt="Avatar de {{ auth.fullName }}" class="avatar">
+                        </a>
                     </div>
                     <div class="col">
-                       <h3>Abidi Mohamed</h3>
-                        <span class="badge badge-primary">3 annonces</span>
+                        <a href="{{ path('user_show', {'slug' : auth.slug}) }}">
+                            <h3>{{ auth.fullName }}</h3>
+                        </a>
+                        <span class="badge badge-primary">{{ auth.ads | length }} annonces</span>
                     </div>
                 </div>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-                    Porro ex numquam rem doloribus consequatur ad aperiam alias tempore,
-                    reprehenderit facere cumque, ut veritatis quae laboriosam. Soluta non sed nemo est?
-                </p>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-                    Porro ex numquam rem doloribus consequatur ad aperiam alias tempore,
-                    reprehenderit facere cumque, ut veritatis quae laboriosam. Soluta non sed nemo est?
-                </p>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-                    Porro ex numquam rem doloribus consequatur ad aperiam alias tempore,
-                    reprehenderit facere cumque, ut veritatis quae laboriosam. Soluta non sed nemo est?
-                </p>
+
+                {{ auth.description | raw }}
+
             </div>
 
         </div>

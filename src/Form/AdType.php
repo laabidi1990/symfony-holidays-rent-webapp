@@ -15,22 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class AdType extends AbstractType
 {
-    /**
-     * Permet d'avoir la configuration de base d'un champ de formulaire
-     *
-     * @param string $label
-     * @param string $placeholder
-     * @return array
-     */
-    private function getFormConfig($label, $placeholder)
-    {
-        return [
-            'label' => $label,
-            'attr' => [
-                'placeholder' => $placeholder
-            ]
-        ];
-    }
+    use ApplicationType;
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {

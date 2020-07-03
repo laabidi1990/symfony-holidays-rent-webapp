@@ -19,6 +19,9 @@
       </p>
       <p class="lead">
         <a class="btn btn-primary btn-lg" href="#" role="button">Voir nos annonces</a>
+        {% if app.user %}
+          <a class="btn btn-primary btn-lg ml-3" href="#" role="button">Créer une nouvelle annonce</a>
+        {% endif %}
       </p>
     </div>
 
