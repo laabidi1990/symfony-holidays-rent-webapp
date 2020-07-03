@@ -2,19 +2,20 @@
 
 namespace App\Controller;
 
-use App\Entity\UpdatePassword;
 use App\Entity\User;
 use App\Form\EditAccountType;
+use App\Entity\UpdatePassword;
 use App\Form\RegistrationType;
 use App\Form\UpdatePasswordType;
+use Symfony\Component\Form\FormError;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\FormError;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class AccountController extends AbstractController
 {
@@ -82,6 +83,7 @@ class AccountController extends AbstractController
      * permet de modifier le profile de l'utilisateur
      * 
      * @Route("/account/edit", name="account_edit")
+     * @IsGranted("ROLE_USER")
      *
      * @return Response
      */
@@ -108,6 +110,7 @@ class AccountController extends AbstractController
      * Modification du password
      * 
      * @Route("/account/update-password", name="update_password")
+     * @IsGranted("ROLE_USER")
      *
      * @return Response
      */
@@ -148,6 +151,7 @@ class AccountController extends AbstractController
      * Permet d'afficher la page de l"utilisateur actuel
      * 
      * @Route("/account", name="account_index")
+     * @IsGranted("ROLE_USER")
      *
      * @return Response
      */

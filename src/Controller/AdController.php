@@ -6,12 +6,14 @@ use App\Entity\Ad;
 use App\Form\AdType;
 use App\Entity\Image;
 use App\Repository\AdRepository;
-use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormView;
 //use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\FormView;
 
 class AdController extends AbstractController
 {
@@ -36,6 +38,7 @@ class AdController extends AbstractController
      * Création d'une nouvelle annonce
      * 
      * @Route("ads/create", name="ads_create")
+     * @IsGranted("ROLE_USER")
      */
     public function create(Request $request, EntityManagerInterface $manager)
     {
@@ -73,10 +76,11 @@ class AdController extends AbstractController
      * Permet d'afficher la formulaire d'édition
      * 
      * @Route("ads/{slug}/edit", name="ads_edit")
+     * @Security("is_granted('ROLE_USER') and user === ad.getAuthor()", message="Vous ne pouvez pas modifier cette annonce")
      *
      * @return Response
      */
-    public function edit(Ad $ad, Request $request,EntityManagerInterface $manager) 
+    public function edit(Ad $ad, Request $request, EntityManagerInterface $manager) 
     {
         $form = $this->createForm(AdType::class, $ad);
 
@@ -117,6 +121,24 @@ class AdController extends AbstractController
         return $this->render('ad/show.html.twig', [
             'ad' => $ad,
         ]);
+    }
+
+    /**
+     * Permet de supprimer une seule annonce
+     * 
+     * @Route("/ads/{slug}/delete", name="ads_delete")
+     * @Security("is_granted('ROLE_USER') and user === ad.getAuthor()", message="Vous ne pouvez pas supprimer cette annonce")
+     * 
+     * @return Response
+     */
+    public function delete(Ad $ad, EntityManagerInterface $manager)
+    {
+        $manager->remove($ad);
+        $manager->flush();
+
+        $this->addFlash('success', "Votre annonce a été supprimée avec succée");
+
+        return $this->redirectToRoute('ads_index');
     }
 
  

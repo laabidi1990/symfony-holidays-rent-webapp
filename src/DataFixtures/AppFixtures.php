@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Ad;
 use Faker\Factory;
+use App\Entity\Role;
 use App\Entity\User;
 use App\Entity\Image;
 use Mmo\Faker\PicsumProvider;
@@ -27,6 +28,22 @@ class AppFixtures extends Fixture
 
         $faker = Factory::create('fr-FR');
         $faker->addProvider(new \Mmo\Faker\PicsumProvider($faker));
+
+        $adminRole = new Role();
+        $adminRole->setTitle('ROLE_ADMIN');
+        $manager->persist($adminRole);
+
+        $adminUser = new User();
+        $adminUser->setFirstName('Mohamed')
+                    ->setLastName('Laabidi')
+                    ->setEmail('mabidi1990@gmail.com')
+                    ->setHashedPassword($this->encoder->encodePassword($adminUser, 'password'))
+                    ->setPicture('https://avatars.io/twitter/MDLBD')
+                    ->setIntroduction($faker->sentence())
+                    ->setDescription('<p>' . join('</p><p>', $faker->paragraphs(5)) . '</p>')
+                    ->addUserRole($adminRole);
+
+        $manager->persist($adminUser);
         
         // On gère les utilisateurs
         $users = [];
