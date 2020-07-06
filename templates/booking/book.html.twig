@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Réservation pour l'annonce : {{ ad.title }}{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"/>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="h2 my-4">Réserver pour l'annonce : {{ ad.title }}</h1>
+        <p>Vous ete sur le point de réserver le bien de <strong>{{ ad.author.fullName }}</strong>, 
+        Merci de remplir le formulaire, et on s'occupe du reste</p>
+
+        {{ form_start(form) }}
+            <div class="alert alert-light bg-light">
+                <h3 class="my-3">Choisissez les dates qui vous intèressent</h3>
+                <div class="row">
+                    <div class="col-4">
+                        {{ form_row(form.startDate) }}
+                    </div>
+                    <div class="col-4">
+                        {{ form_row(form.endDate) }}
+                    </div>
+                </div>
+                <h4 class="mt-3">Montant de séjour : <span id="amount">0</span>&euro;</h4>
+                <span id="days">0</span> nuit(s) ({{ ad.price }}&euro;/nuit)
+
+                <h4 class="mt-4">Vous avez un commentaire ?</h>
+                {{ form_row(form.comment, {'attr': {'class': 'mt-3'}}) }}
+            </div>
+
+            <button type="submit" class="btn btn-primary ml-4">Je réserve</button>
+        {{ form_end(form) }}
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#booking_startDate, #booking_endDate').datepicker({
+                format: 'dd/mm/yyyy',
+                datesDisabled: [
+                    {% for day in ad.notAvailableDays %}
+                        "{{ day.format('d/m/Y') }}",
+                    {% endfor %}
+                ],
+                startDate: new Date()
+            });
+
+             $('#booking_startDate, #booking_endDate').on('change', calculAmount)
+
+            function calculAmount() {
+
+                // expression régulière pour changer la format du date 
+                // 18/09/2020 => (\d+)\/(\d+)\/(\d{4}) => 2020-09-18
+                const endDate = new Date($('#booking_endDate').val().replace(/(\d+)\/(\d+)\/(\d{4})/, '$3-$2-$1'));
+                const startDate = new Date($('#booking_startDate').val().replace(/(\d+)\/(\d+)\/(\d{4})/, '$3-$2-$1'));
+
+                if (startDate && endDate && startDate < endDate) {
+                    const interval= endDate.getTime() - startDate.getTime();
+                    const days = interval / (24 * 60 * 60 * 1000)
+
+                    const amount = days * {{ ad.price }};
+
+                    $('#days').text(days);
+                    $('#amount').text(amount.toLocaleString('fr-FR'));
+                }
+            }
+        })
+    </script>
+{% endblock %}
+
