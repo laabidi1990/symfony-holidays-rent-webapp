@@ -9,15 +9,16 @@ trait ApplicationType
      *
      * @param string $label
      * @param string $placeholder
+     * @param string $options
      * @return array
      */
-    protected function getFormConfig($label, $placeholder)
+    protected function getFormConfig($label, $placeholder, $option = [])
     {
-        return [
+        return array_merge_recursive([
             'label' => $label,
             'attr' => [
                 'placeholder' => $placeholder
             ]
-        ];
+        ], $option);
     }
 }
