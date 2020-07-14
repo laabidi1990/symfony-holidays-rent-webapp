@@ -17,12 +17,13 @@
         </a>
         <div class="card-body text-center">
             <h4 class="card-title">
-                {{ ad.title }}
+                {{ ad.title | u.truncate(30, true) }}
             </h4>
-            <p class="card-text">
-                {{ ad.introduction }}
-            </p>
-            <a href="{{ url }}" class="btn btn-secondary">En savoir plus</a>
+            <span class="card-text">
+                {{ ad.introduction | u.truncate(100, true)}} <br> 
+                <i class="fa fa-arrow-circle-down text-primary"></i>
+            </span> <br>
+            <a href="{{ url }}" class="btn btn-outline-primary">En savoir plus</a>
             {% if app.user is same as (ad.author) %}
                 <a href="{{ path('ads_edit', {'slug' : ad.slug}) }}" class="btn btn-secondary ml-3">Modifier l'annonce</a>
             {% endif %}
